@@ -1,0 +1,12 @@
+{
+  "name": "spotifyapp",
+  "version": "1.0.0",
+  "description": "## Project Overview This app allows users to search Spotify's catalog for music. Users can search for tracks, albums, and artists and play music on Spotify's web player.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
