@@ -3,40 +3,62 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const dotenv = require('dotenv');
+const querystring = require('querystring');
+const crypto = require('crypto');
+const { URLSearchParams } = require('url');
 
 dotenv.config();
 const router = express.Router();
 
+const redirectUri = process.env.REDIRECT_URI;
+const clientId = process.env.SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
 router.get('/login', (req, res) => {
-    const scopes = encodeURIComponent('user-read-email user-read-private');
-    const redirectUri = encodeURIComponent(process.env.REDIRECT_URI);
-    const clientId = process.env.SPOTIFY_CLIENT_ID;
-
-    const spotifyAuthUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${scopes}&redirect_uri=${redirectUri}`;
+    const state = crypto.randomBytes(16).toString('hex');
+    const scope = encodeURIComponent('user-read-email user-read-private');
     
-    res.redirect(spotifyAuthUrl);
+    res.redirect('https://accounts.spotify.com/authorize?' + 
+    querystring.stringify({
+        response_type: 'code',
+        client_id: clientId,
+        scope: scope,
+        redirect_uri: redirectUri,
+        state: state
+    }));
 });
 
 
 router.get('/callback', async (req, res) => {
     const code = req.query.code;
+    const state = req.query.state;
+
+    if (!state) {
+        return res.redirect('/api#' + 
+        querystring.stringify({
+            error: 'state_mismatch'
+        }));
+    }
 
     if (!code) {
         return res.status(400).json({ message: 'Authorization code missing' });
     }
 
-    try {
-        const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
-            grant_type: 'authorization_code',
-            code: code,
-            redirect_uri: process.env.REDIRECT_URI,
-            client_id: process.env.SPOTIFY_CLIENT_ID,
-            client_secret: process.env.SPOTIFY_CLIENT_SECRET,
-        }), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        });
+    const data = new URLSearchParams({
+        code: code,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code'
+    });
 
+    const authOptions = {
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+        },
+    };
+
+    try {
+        const response = await axios.post('https://accounts.spotify.com/api/token', data, authOptions);
         const { access_token, refresh_token, expires_in } = response.data;
 
         const userProfile = await axios.get('https://api.spotify.com/v1/me', {
@@ -87,8 +109,8 @@ router.get('/refresh', async (req, res) => {
         const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
-            client_id: process.env.SPOTIFY_CLIENT_ID,
-            client_secret: process.env.SPOTIFY_CLIENT_SECRET,
+            client_id: clientId,
+            client_secret: clientSecret,
         }), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
