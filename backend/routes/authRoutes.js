@@ -22,6 +22,10 @@ router.get('/login', (req, res) => {
 router.get('/callback', async (req, res) => {
     const code = req.query.code;
 
+    if (!code) {
+        return res.status(400).json({ message: 'Authorization code missing' });
+    }
+
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
             grant_type: 'authorization_code',
@@ -64,6 +68,11 @@ router.get('/callback', async (req, res) => {
         console.error('Error during Spotify callback:', error.message);
         if (error.response) {
             console.error('Spotify API response:', error.response.data);
+            if (error.response.data.error === 'invalid_grant') {
+                return res.status(400).json({
+                    message: 'Authorization code expired or invalid. Please log in again.',
+                });
+            }
             res.status(500).json({ message: 'Authentication failed', details: error.response.data });
         } else {
             res.status(500).json({ message: 'Authentication failed', details: error.message });
