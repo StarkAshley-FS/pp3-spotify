@@ -62,7 +62,12 @@ router.get('/callback', async (req, res) => {
 
     } catch (error) {
         console.error('Error during Spotify callback:', error.message);
-        res.status(500).json({ message: 'Authentication failed' });
+        if (error.response) {
+            console.error('Spotify API response:', error.response.data);
+            res.status(500).json({ message: 'Authentication failed', details: error.response.data });
+        } else {
+            res.status(500).json({ message: 'Authentication failed', details: error.message });
+        }
     }
 });
 
