@@ -60,6 +60,7 @@ router.get('/callback', async (req, res) => {
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token', data, authOptions);
         const { access_token, refresh_token, expires_in } = response.data;
+        console.log('Access Token:', access_token)
 
         const userProfile = await axios.get('https://api.spotify.com/v1/me', {
             headers: { Authorization: `Bearer ${access_token}` },
@@ -78,11 +79,13 @@ router.get('/callback', async (req, res) => {
             user.accessToken = access_token;
             user.refreshToken = refresh_token;
             user.tokenExpiry = new Date(Date.now() + expires_in * 1000);
+            await user.save();
         }
 
         await user.save();
 
         const token = jwt.sign({ id: user.spotifyId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log('JWT Token:', token);
 
         res.json({ message: 'Authentication successful', token });
 
@@ -99,27 +102,6 @@ router.get('/callback', async (req, res) => {
         } else {
             res.status(500).json({ message: 'Authentication failed', details: error.message });
         }
-    }
-});
-
-router.get('/refresh', async (req, res) => {
-    const { refreshToken } = req.query;
-
-    try {
-        const response = await axios.post('https://accounts.spotify.com/api/token', new URLSearchParams({
-            grant_type: 'refresh_token',
-            refresh_token: refreshToken,
-            client_id: clientId,
-            client_secret: clientSecret,
-        }), {
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        });
-
-        res.json(response.data);
-
-    } catch (error) {
-        console.error('Error refreshing token:', error.message);
-        res.status(500).json({ message: 'Token refresh failed' });
     }
 });
 
