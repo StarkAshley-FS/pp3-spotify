@@ -30,4 +30,4 @@ JWT_SECRET="your_jwt_secret"
 
 ## Links
 - **Localhost**: [http://localhost3001](http://localhost:3001)
-- **Staging URL**: [https://pp3-5c250b91333d.herokuapp.com/](Heroku)
+- **Staging URL**: [Heroku Link](https://pp3-5c250b91333d.herokuapp.com/)
