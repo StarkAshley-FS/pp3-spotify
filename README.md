@@ -1,22 +1,33 @@
 # pp3-spotify : Spotify Music Search App
 
 ## Project Overview
-This app allows users to search Spotify's catalog for music. Users can search for tracks, albums, and artists and play music on Spotify's web player.
+This app allows users to search Spotify's catalog for music. Users can search for tracks, albums, playlists, and artists and play music on Spotify's web player.
 
 ### Features
 - user login and JWT-based authentication with Spotify
-- search by keyword for artists, tracks, and albums
-- link results directly to spotify's web player
+- search by keyword for artists, tracks, playlists, albums
+- link results directly to Spotify's web player
 
 ## Prerequisites
-- node.js
-- spotify
+- [Node.js](https://nodejs.og)
+- [npm](https://npmjs.com)
+- a [Spotify Developer Account](https://wwww.developer.spotify.com) for API keys
 
 ## Getting Started
-1. clone this repository
-2. run `npm install`
-3. set up a Spotify Developer Account 
+1. clone this repository ```git clone https://github.com/yourusername/spotify-music-search.git
+cd backend```
+2. run ```npm install``` to install dependencies
+3. create a .env file with the following variables:
+```
+PORT = "your_port"
+MONGODB_URI="your_mongo_uri"
+SPOTIFY_CLIENT_ID="your_client_id"
+SPOTIFY_CLIENT_SECRET="your_client_secret"
+REDIRECT_URI="your_redirect_uri"
+JWT_SECRET="your_jwt_secret"
+```
+4. start the server with ```npm start```
 
 ## Links
-- **Localhost**: [http://localhost3000](http://localhost:3000)
+- **Localhost**: [http://localhost3001](http://localhost:3001)
 - **Staging URL**: [https://pp3-5c250b91333d.herokuapp.com/](Heroku)
