@@ -13,11 +13,14 @@ const router = express.Router();
 const redirectUri = process.env.REDIRECT_URI;
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+const frontendURL = process.env.FRONTEND_URL
 
 router.get('/login', (req, res) => {
     const state = crypto.randomBytes(16).toString('hex');
     const scope = encodeURIComponent('user-read-email user-read-private');
-    
+
+    res.cookie('spotify_state', state, { httpOnly: true, secure: true, maxAge: 15 * 60 * 1000 });
+
     res.redirect('https://accounts.spotify.com/authorize?' + 
     querystring.stringify({
         response_type: 'code',
@@ -33,7 +36,9 @@ router.get('/callback', async (req, res) => {
     const code = req.query.code;
     const state = req.query.state;
 
-    if (!state) {
+    const storedState = req.cookies.spotify_state;
+
+    if (!state || state !== storedState) {
         return res.redirect('/api#' + 
         querystring.stringify({
             error: 'state_mismatch'
@@ -87,7 +92,7 @@ router.get('/callback', async (req, res) => {
         const token = jwt.sign({ id: user.spotifyId }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('JWT Token:', token);
 
-        res.json({ message: 'Authentication successful', token });
+        res.redirect(`${frontendURL}/callback?token=${token}`);
 
     } catch (error) {
         console.error('Error during Spotify callback:', error.message);
