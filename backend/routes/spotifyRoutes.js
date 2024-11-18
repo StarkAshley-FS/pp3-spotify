@@ -12,6 +12,12 @@ router.get('/search', jwtAuth, async (req, res) => {
         });
     }
 
+    if (!req.user.accessToken) {
+        return res.status(401).json({
+            message: 'No access token available. Please log in again.',
+        });
+    }
+
     try {
         const response = await axios.get('https://api.spotify.com/v1/search', {
             params: {
