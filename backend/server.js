@@ -3,7 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
-const spotifyRoutes = require('./routes/spotifyRoutes')
+const spotifyRoutes = require('./routes/spotifyRoutes');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 connectDB();
@@ -12,6 +13,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api', authRoutes, spotifyRoutes);
 
