@@ -14,7 +14,7 @@ This app allows users to search Spotify's catalog for music. Users can search fo
 - a [Spotify Developer Account](https://wwww.developer.spotify.com) for API keys
 
 ## Getting Started
-1. clone this repository ```git clone https://github.com/yourusername/spotify-music-search.git
+1. clone this repository ```git clone https://github.com/StarkAshley-FS/pp3-spotify.git
 cd backend```
 2. run ```npm install``` to install dependencies
 3. create a .env file with the following variables:
