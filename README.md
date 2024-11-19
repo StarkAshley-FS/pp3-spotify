@@ -25,6 +25,7 @@ SPOTIFY_CLIENT_ID="your_client_id"
 SPOTIFY_CLIENT_SECRET="your_client_secret"
 REDIRECT_URI="your_redirect_uri"
 JWT_SECRET="your_jwt_secret"
+FRONTEND_URL="your_front_end"
 ```
 4. start the server with ```npm start```
 5. cd .. 
