@@ -30,8 +30,7 @@ JWT_SECRET="your_jwt_secret"
 5. cd .. 
 6. cd frontend
 7. create a .env file with the following: 
-```REACT_APP_API_URL=http://localhost:3001
-```
+```REACT_APP_API_URL=http://localhost:3001```
 8. start the frontend with ```npm start```
 
 
