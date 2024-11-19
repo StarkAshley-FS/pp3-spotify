@@ -27,7 +27,15 @@ REDIRECT_URI="your_redirect_uri"
 JWT_SECRET="your_jwt_secret"
 ```
 4. start the server with ```npm start```
+5. cd .. 
+6. cd frontend
+7. create a .env file with the following: 
+```REACT_APP_API_URL=http://localhost:3001
+```
+8. start the frontend with ```npm start```
+
 
 ## Links
-- **Localhost**: [http://localhost3001](http://localhost:3001)
+- **Localhost backend**: [http://localhost3001](http://localhost:3001)
+- **Localhost frontend**: [http://localhost:3000](http://localhost:3000)
 - **Staging URL**: [Heroku Link](https://pp3-5c250b91333d.herokuapp.com/)
