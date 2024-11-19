@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const spotifyRoutes = require('./routes/spotifyRoutes');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 dotenv.config();
 connectDB();
