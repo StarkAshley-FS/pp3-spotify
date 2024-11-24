@@ -11,7 +11,7 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem('spotifyToken');
     if (token) {
-      setIsLoggedIn(true);
+      setIsLoggedIn(!!token);
     }
   }, []);
 
